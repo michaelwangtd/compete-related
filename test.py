@@ -3,6 +3,40 @@ import time
 import math
 import os
 
+def findSubStr(substr, str, i):
+    count = 0
+    while i > 0:                   #循环来查找
+        index = str.find(substr)
+        if index == -1:
+            return -1
+        else:
+            str = str[index+1:]   #第一次出现该字符串后后面的字符
+            i -= 1
+            count = count + index + 1   #位置数总加起来
+    return count - 1
+
+
+
+line = """2,新,"黄,沈",黄家山村,1394040****"""
+print(findSubStr('"',line,1))
+print(findSubStr('"',line,2))
+print(line[findSubStr('"',line,1):findSubStr('"',line,2)+1])
+str2 = line[findSubStr('"',line,1):findSubStr('"',line,2)+1]
+str1 = line[:findSubStr('"',line,1)]
+str3 = line[findSubStr('"',line,2)+1:]
+print(str1)
+print(str2)
+print(str3)
+
+# testLine = """jjjjkjk"""
+# print(findSubStr('"',testLine,1))
+
+
+
+
+# testList = ['a','b','c']
+# result = ','.join(testList)
+# print(result)
 
 
 # testList = [[2,3,14],[3,5,12],[4,7,11]]
@@ -61,11 +95,16 @@ import os
 
 # # 时间戳以“秒”为单位
 # # timeStr = '2016-09-10-18-55-04'
-# timeStr = '2016-09-10-18-55'
+# timeStr1 = '2016-09-10-18-55'
+# timeStr2 = '2016-09-11-18-55'
 # # structTime = time.strptime(timeStr,'%Y-%m-%d-%H-%M-%S')     # result: 1473504904.0
-# structTime = time.strptime(timeStr,'%Y-%m-%d-%H-%M')        # result: 1473504900.0
-# timeStamp = time.mktime(structTime)
-# print(timeStamp)
+# structTime1 = time.strptime(timeStr1,'%Y-%m-%d-%H-%M')        # result: 1473504900.0
+# structTime2 = time.strptime(timeStr2,'%Y-%m-%d-%H-%M')        # result: 1473504900.0
+# timeStamp1 = time.mktime(structTime1)
+# timeStamp2 = time.mktime(structTime2)
+#
+# print(timeStamp2-timeStamp1)    #86400.0
+# print(86400/24/60/60)
 
 
 # timeStamp = 1473504900
