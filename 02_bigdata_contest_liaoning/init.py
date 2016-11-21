@@ -53,7 +53,7 @@ def readTxt2List(filePath):
                     str2 = str2.replace(',','，')
                     tempStr = str1 + str2 + str3
                 lineList = tempStr.split(',')
-                print(i,len(lineList),lineList)
+                # print(i,len(lineList),lineList)
                 # print(lineList)
                 resultList.append(lineList)
                 i += 1
@@ -75,10 +75,22 @@ def createLinkList(complaintRecord,faultList):
     for item in faultList:
       if item[len(item)-2] <endTime and item[len(item)-2] > startTime:
           # 计算两者经纬度距离
-            distanceFloat = getDistance(float(complaintRecord[14]),float(complaintRecord[13]),float(item[9]),float(item[8]))
-            item.append(str(distanceFloat))
-            # print('new item:',str(item))
-            resultSet.append(item)
+            try:
+                tempItem = []
+                # print('----',float(complaintRecord[14]),float(complaintRecord[13]),float(item[9]),float(item[8]))
+                if float(complaintRecord[14]) == float(item[9]) and float(complaintRecord[13]) == float(item[8]):
+                    tempItem.extend(item)
+                    tempItem.append(str(0.0))
+                else:
+                    distanceFloat = getDistance(float(complaintRecord[14]),float(complaintRecord[13]),float(item[9]),float(item[8]))
+                    # print(distanceFloat)
+                    tempItem.extend(item)
+                    tempItem.append(str(distanceFloat))
+                    # item.append(str(distanceFloat))
+                    # print('new item:',str(item))
+                resultSet.append(tempItem)
+            except Exception as ex:
+                print(ex)
     # 找出符合条件的故障纪录
     sortedResultSet = sorted(resultSet,key=lambda item:item[len(item)-1])
     if sortedResultSet:
@@ -92,21 +104,22 @@ if __name__ == '__main__':
 
 
     complaintSet = readTxt2List('complaint_set.csv')
-    # faultSet = readTxt2List('fault_set.csv')
-    #
-    # fw = open('result_set.csv','w',encoding='utf-8')
-    # title = "工单流水号,主题,完成时间,反馈区县,反馈地市,建单时间,投诉分类,用户归属地,故障号码,故障时间,反馈区县1,故障地点,故障地点1,经度,纬度,客户姓名,故障号码.1,客户品牌,客户级别,投诉时间,是否大面积投诉,工单性质,网络标识,用户类型,投诉场景,1问题原因,处理措施,网络口建议投诉分类,网络口建议投诉原因,疑难投诉,处理结果,投诉时间1,|网管告警流水号,告警标题,告警级别,告警发生时间,告警清除时间,告警网元,设备类型,告警对象名称,x,y,告警对象类型,设备厂家,所属城市,所属区县,是否派单,基站覆盖类型,告警发生时间1,告警清除时间1,基站距离"
-    # fw.writelines(title + '\n')
-    #
-    # i = 1
-    # for item in complaintSet:
-    #     print('complaintSet',i,item)
-    #     finalList = createLinkList(item,faultSet)
-    #     outputLine = ','.join(finalList)
-    #     print(type(outputLine),outputLine)
-    #     fw.writelines(outputLine + '\n')
-    #     i += 1
-    # fw.close()
+    faultSet = readTxt2List('fault_set.csv')
+
+
+    fw = open('result_set.csv','w',encoding='utf-8')
+    title = "工单流水号,主题,完成时间,反馈区县,反馈地市,建单时间,投诉分类,用户归属地,故障号码,故障时间,反馈区县1,故障地点,故障地点1,经度,纬度,客户姓名,故障号码.1,客户品牌,客户级别,投诉时间,是否大面积投诉,工单性质,网络标识,用户类型,投诉场景,1问题原因,处理措施,网络口建议投诉分类,网络口建议投诉原因,疑难投诉,处理结果,投诉时间1,|网管告警流水号,告警标题,告警级别,告警发生时间,告警清除时间,告警网元,设备类型,告警对象名称,x,y,告警对象类型,设备厂家,所属城市,所属区县,是否派单,基站覆盖类型,告警发生时间1,告警清除时间1,基站距离"
+    fw.writelines(title + '\n')
+
+    i = 1
+    for item in complaintSet:
+        print('complaintSet',i,item)
+        finalList = createLinkList(item,faultSet)
+        outputLine = ','.join(finalList)
+        # print(type(outputLine),outputLine)
+        fw.writelines(outputLine + '\n')
+        i += 1
+    fw.close()
 
 
 
