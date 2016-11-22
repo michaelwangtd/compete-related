@@ -1,26 +1,41 @@
 # -*- coding:utf-8 -*-
+
+#-------------------
+# Author:CaptWang
+# Source:Bigdata LiaoNing
+# Date:2016/11/21
+#-------------------
+
 from math import *
+
 """
     1 fault_set一共18列，complaint_set一共32列
     2 纬度(latitude)   经度(longitude)
 """
 
+
 def findSubStr(substr, str, i):
+    '''
+        找出第i个字串位置
+    '''
     count = 0
-    while i > 0:                   #循环来查找
+    while i > 0:                   
         index = str.find(substr)
         if index == -1:
             return -1
         else:
-            str = str[index+1:]   #第一次出现该字符串后后面的字符
+            str = str[index+1:]   
             i -= 1
-            count = count + index + 1   #位置数总加起来
+            count = count + index + 1   
     return count - 1
 
 
-def getDistance(Lat_A,Lng_A,Lat_B,Lng_B): #第一种计算方法
+def getDistance(Lat_A,Lng_A,Lat_B,Lng_B): 
+    '''
+        get distance by lat and lng
+    '''
     ra=6378.140 #赤道半径
-    rb=6356.755 #极半径 （km）
+    rb=6356.755 #极半径 
     flatten=(ra-rb)/ra  #地球偏率
     rad_lat_A=radians(Lat_A)
     rad_lng_A=radians(Lng_A)
@@ -38,6 +53,9 @@ def getDistance(Lat_A,Lng_A,Lat_B,Lng_B): #第一种计算方法
 
 
 def readTxt2List(filePath):
+    '''
+        load data from txt
+    '''
     resultList = []
     fr = open(filePath,'r',encoding='utf-8')
     i = 1
@@ -66,8 +84,10 @@ def readTxt2List(filePath):
 
 
 def createLinkList(complaintRecord,faultList):
+    '''
+        找出符合条件的记录
+    '''
     resultSet = []
-    # 确定时间区间
     dayTime = 86400.0
     endTime = complaintRecord[len(complaintRecord)-1]
     startTime = str(float(endTime) - dayTime)
@@ -91,7 +111,6 @@ def createLinkList(complaintRecord,faultList):
                 resultSet.append(tempItem)
             except Exception as ex:
                 print(ex)
-    # 找出符合条件的故障纪录
     sortedResultSet = sorted(resultSet,key=lambda item:item[len(item)-1])
     if sortedResultSet:
         complaintRecord.extend(sortedResultSet[0])
@@ -120,21 +139,5 @@ if __name__ == '__main__':
         fw.writelines(outputLine + '\n')
         i += 1
     fw.close()
-
-
-
-
-
-
-    # createLinkList(complaintSet[0],faultSet)
-
-    # # 根据经纬度计算两者距离
-    # Lat_A = 32.060255
-    # Lng_A = 118.796877  # 南京
-    # Lat_B = 39.904211
-    # Lng_B = 116.407395  # 北京
-    # print('距离：',getDistance(Lat_A,Lng_A,Lat_B,Lng_B),type(getDistance(Lat_A,Lng_A,Lat_B,Lng_B)))   # 896.5327847032568 km
-    # print('距离：',getDistance(41.796054,123.400314,41.771332,123.407483),type(getDistance(41.796054,123.400314,41.771332,123.407483)))   # 2.8097775924988215 km
-
 
 
